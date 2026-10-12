@@ -1,10 +1,9 @@
 # Lista PG
 
-App Android para controlar quem já pagou uma rifa/bolão. Você cadastra as pessoas (número + nome), marca quem pagou e o app gera a lista pronta para copiar e colar no WhatsApp:
+App Android para controlar quem já pagou uma rifa/bolão. Você cadastra as pessoas (número + nome), marca quem pagou e o app gera a lista pronta para copiar e colar no WhatsApp. A lista mostra **só quem pagou**, ordenado pelo número:
 
 ```
 1 - fulano PG
-2 - siclano
 3 - beltrano PG
 ```
 

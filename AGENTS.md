@@ -42,7 +42,7 @@ Docs: https://docs.expo.dev/eas/index.md
 
 ## Este projeto (Lista PG)
 
-App Android para marcar quem pagou uma rifa/bolão e gerar o texto `1 - fulano PG` para colar no WhatsApp. Sem backend: tudo fica em SQLite local.
+App Android para marcar quem pagou uma rifa/bolão e gerar o texto para colar no WhatsApp. O texto lista só quem pagou, ordenado pelo número (`1 - fulano PG`). Sem backend: tudo fica em SQLite local.
 
 - Comandos: `bun run test` · `bun run test:watch` · `bun run typecheck` · `bun run lint` · `bun run db:generate`
 - Banco: Drizzle ORM sobre `expo-sqlite`. Schema em `src/db/schema.ts`. Ao mudar o schema, rode `bun run db:generate` e commite `drizzle/`. Nunca edite migrations geradas à mão.
