@@ -1,56 +1,102 @@
-# Welcome to your Expo app 👋
+# Lista PG
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+App Android para controlar quem já pagou uma rifa/bolão. Você cadastra as pessoas (número + nome), marca quem pagou e o app gera a lista pronta para copiar e colar no WhatsApp:
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+1 - fulano PG
+2 - siclano
+3 - beltrano PG
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Não tem backend nem login: os dados ficam salvos no próprio celular.
 
-### Other setup steps
+## Stack
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+- [Expo](https://docs.expo.dev/) SDK 57 + React Native + TypeScript
+- [Expo Router](https://docs.expo.dev/router/introduction/) para navegação
+- [expo-sqlite](https://docs.expo.dev/versions/v57.0.0/sdk/sqlite/) + [Drizzle ORM](https://orm.drizzle.team/docs/connect-expo-sqlite) como banco local
+- [vitest-expo](https://github.com/niondigital/vitest-expo) + [Testing Library](https://callstack.github.io/react-native-testing-library/) para testes
+- [Bun](https://bun.sh/) como gerenciador de pacotes
 
-## Learn more
+## Pré-requisitos
 
-To learn more about developing your project with Expo, look at the following resources:
+- Node.js 24+
+- Bun 1.3+
+- Celular Android com o app **Expo Go** ([Play Store](https://play.google.com/store/apps/details?id=host.exp.exponent))
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Rodar localmente
 
-## Join the community
+```bash
+bun install
+bun run start
+```
 
-Join our community of developers creating universal apps.
+Escaneie o QR code que aparece no terminal com o Expo Go. O celular e o computador precisam estar na mesma rede Wi-Fi. Se não conectar (rede corporativa, firewall), use o modo túnel:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+bunx expo start --tunnel
+```
+
+Para instalar pacotes, use sempre `bunx expo install <pacote>` em vez de `bun add`. Ele escolhe a versão compatível com o SDK do Expo.
+
+## Banco de dados
+
+- SQLite local no aparelho, arquivo `lista-pg.db`. Não precisa configurar nada.
+- As migrations rodam sozinhas quando o app abre (`useMigrations` em `src/app/_layout.tsx`).
+- O schema fica em `src/db/schema.ts` e as migrations geradas, em `drizzle/`.
+
+Para alterar o schema:
+
+1. Edite `src/db/schema.ts`.
+2. Gere a migration:
+   ```bash
+   bun run db:generate
+   ```
+3. Commite a pasta `drizzle/` junto com a mudança.
+
+Para zerar o banco no celular, limpe os dados do app (Configurações → Apps → Expo Go/Lista PG → Armazenamento → Limpar dados) ou reinstale o app.
+
+## Testes e qualidade
+
+```bash
+bun run test        # roda todos os testes uma vez
+bun run test:watch  # modo watch
+bun run typecheck   # TypeScript
+bun run lint        # ESLint
+```
+
+- Os testes de tela usam vitest-expo, que roda o código React Native real com os módulos nativos mockados.
+- Os testes de banco usam SQLite em memória (better-sqlite3) com as **mesmas migrations** de `drizzle/`. Use `createTestDb()` de `src/db/test-db.ts`.
+
+## Gerar e instalar o app (APK)
+
+O APK é gerado na nuvem pelo [EAS Build](https://docs.expo.dev/build/introduction/). Você precisa de uma conta Expo (é grátis).
+
+```bash
+bunx eas-cli login
+```
+
+```bash
+bunx eas-cli build -p android --profile preview
+```
+
+- No primeiro build, o EAS pergunta o *package name* do Android (ex.: `com.seunome.listapg`) e se deve criar a chave de assinatura. Aceite as duas coisas.
+- Quando o build terminar, o terminal mostra um link e um QR code para baixar o `.apk`.
+- No celular, abra o link, baixe e instale o APK. O Android vai pedir permissão para "instalar apps de fontes desconhecidas" para o navegador. Permita.
+- Para atualizar o app, gere um novo build e instale por cima. Os dados são mantidos.
+
+Os profiles de build estão em `eas.json`. `preview` gera um APK para instalar direto, e `production` gera um AAB para a Play Store.
+
+## Estrutura
+
+```
+src/
+  app/            rotas (expo-router): cada arquivo é uma tela
+    (tabs)/       abas Lista (index) e Prévia
+    editar.tsx    cadastro de pessoas
+  components/     componentes reutilizáveis
+  constants/      tema e espaçamentos
+  db/             schema, cliente do banco e helper de testes
+  hooks/
+drizzle/          migrations geradas pelo drizzle-kit
+```

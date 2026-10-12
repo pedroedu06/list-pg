@@ -39,3 +39,13 @@ Docs: https://docs.expo.dev/eas/index.md
 - If `ios/` and `android/` directories do not exist, they are generated (Continuous Native Generation). Never create or edit them by hand — configure native behavior in `app.json` and config plugins.
 - Expo Go only includes its bundled native modules. After adding a library with native code, the app needs a development build: `npx expo run:ios|android` locally, or `eas build --profile development`.
 - Prefer recommended Expo modules over third-party libraries, and check your available skills before adding dependencies. Docs: https://docs.expo.dev/versions/latest/index.md
+
+## Este projeto (Lista PG)
+
+App Android para marcar quem pagou uma rifa/bolão e gerar o texto `1 - fulano PG` para colar no WhatsApp. Sem backend: tudo fica em SQLite local.
+
+- Comandos: `bun run test` · `bun run test:watch` · `bun run typecheck` · `bun run lint` · `bun run db:generate`
+- Banco: Drizzle ORM sobre `expo-sqlite`. Schema em `src/db/schema.ts`. Ao mudar o schema, rode `bun run db:generate` e commite `drizzle/`. Nunca edite migrations geradas à mão.
+- Código que acessa o banco recebe um `Db` (`src/db/types.ts`) por parâmetro, para rodar tanto com o banco do app (`src/db/client.ts`) quanto com `createTestDb()` (`src/db/test-db.ts`, better-sqlite3 em memória com as migrations reais).
+- Testes: vitest-expo + Testing Library. Os aliases de path ficam em `vitest.config.mts` (`resolve.alias`), porque o Vite não lê `babel.config.js`.
+- ESLint fica no 9.x: o `eslint-plugin-react` ainda não suporta o ESLint 10.
