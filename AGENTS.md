@@ -47,5 +47,5 @@ App Android para marcar quem pagou uma rifa/bolão e gerar o texto para colar no
 - Comandos: `bun run test` · `bun run test:watch` · `bun run typecheck` · `bun run lint` · `bun run db:generate`
 - Banco: Drizzle ORM sobre `expo-sqlite`. Schema em `src/db/schema.ts`. Ao mudar o schema, rode `bun run db:generate` e commite `drizzle/`. Nunca edite migrations geradas à mão.
 - Código que acessa o banco recebe um `Db` (`src/db/types.ts`) por parâmetro, para rodar tanto com o banco do app (`src/db/client.ts`) quanto com `createTestDb()` (`src/db/test-db.ts`, better-sqlite3 em memória com as migrations reais).
-- Testes: vitest-expo + Testing Library. Os aliases de path ficam em `vitest.config.mts` (`resolve.alias`), porque o Vite não lê `babel.config.js`.
+- Testes: vitest-expo + Testing Library. `vitest.setup.ts` troca `@/db/client` por um banco em memória em todos os testes; limpe as tabelas no `beforeEach`. Os aliases de path ficam em `vitest.config.mts` (`resolve.alias`), porque o Vite não lê `babel.config.js`.
 - ESLint fica no 9.x: o `eslint-plugin-react` ainda não suporta o ESLint 10.

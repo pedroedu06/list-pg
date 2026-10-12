@@ -1,24 +1,22 @@
 import { eq } from 'drizzle-orm';
 
-import { pessoas } from './schema';
+import { users } from './schema';
 import { createTestDb } from './test-db';
 
-describe('tabela pessoas', () => {
-  test('cadastra uma pessoa desmarcada por padrão', () => {
+describe('tabela users', () => {
+  test('cadastra um usuário com paid=false por padrão', () => {
     const db = createTestDb();
 
-    db.insert(pessoas).values({ numero: 1, nome: 'Fulano' }).run();
+    db.insert(users).values({ number: 1, name: 'Fulano' }).run();
 
-    const fulano = db.select().from(pessoas).where(eq(pessoas.numero, 1)).get();
-    expect(fulano).toMatchObject({ numero: 1, nome: 'Fulano', pago: false });
+    const fulano = db.select().from(users).where(eq(users.number, 1)).get();
+    expect(fulano).toMatchObject({ number: 1, name: 'Fulano', paid: false });
   });
 
   test('não aceita número repetido', () => {
     const db = createTestDb();
-    db.insert(pessoas).values({ numero: 7, nome: 'Fulano' }).run();
+    db.insert(users).values({ number: 7, name: 'Fulano' }).run();
 
-    expect(() => db.insert(pessoas).values({ numero: 7, nome: 'Siclano' }).run()).toThrow(
-      /UNIQUE/,
-    );
+    expect(() => db.insert(users).values({ number: 7, name: 'Siclano' }).run()).toThrow(/UNIQUE/);
   });
 });

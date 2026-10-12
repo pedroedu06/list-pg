@@ -13,5 +13,5 @@ export default defineConfig({
       { find: /^@\//, replacement: fromRoot('./src/') },
     ],
   },
-  test: { globals: true },
+  test: { globals: true, setupFiles: ['./vitest.setup.ts'] },
 });

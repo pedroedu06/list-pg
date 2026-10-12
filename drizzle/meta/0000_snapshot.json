@@ -1,11 +1,11 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "0415d8f2-df11-4c5a-ad50-f994b450ff65",
+  "id": "f17ec1ca-9efd-4bc8-8f71-4a1424adfafe",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "pessoas": {
-      "name": "pessoas",
+    "users": {
+      "name": "users",
       "columns": {
         "id": {
           "name": "id",
@@ -14,22 +14,22 @@
           "notNull": true,
           "autoincrement": true
         },
-        "numero": {
-          "name": "numero",
+        "number": {
+          "name": "number",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "nome": {
-          "name": "nome",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "pago": {
-          "name": "pago",
+        "paid": {
+          "name": "paid",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -38,10 +38,10 @@
         }
       },
       "indexes": {
-        "pessoas_numero_unique": {
-          "name": "pessoas_numero_unique",
+        "users_number_unique": {
+          "name": "users_number_unique",
           "columns": [
-            "numero"
+            "number"
           ],
           "isUnique": true
         }
