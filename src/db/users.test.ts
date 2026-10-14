@@ -1,5 +1,13 @@
 import { createTestDb } from './test-db';
-import { createUser, deleteUser, listUsers, updateUser, UserValidationError } from './users';
+import {
+  clearPaid,
+  createUser,
+  deleteUser,
+  listUsers,
+  setPaid,
+  updateUser,
+  UserValidationError,
+} from './users';
 
 describe('users', () => {
   test('lista ordenado pelo número', () => {
@@ -79,5 +87,32 @@ describe('users', () => {
     deleteUser(db, fulano.id);
 
     expect(listUsers(db)).toEqual([siclano]);
+  });
+
+  test('marca e desmarca o pagamento só daquela pessoa', () => {
+    const db = createTestDb();
+    const fulano = createUser(db, { number: 1, name: 'Fulano' });
+    createUser(db, { number: 2, name: 'Siclano' });
+
+    setPaid(db, fulano.id, true);
+    expect(listUsers(db).map((u) => u.paid)).toEqual([true, false]);
+
+    setPaid(db, fulano.id, false);
+    expect(listUsers(db).map((u) => u.paid)).toEqual([false, false]);
+  });
+
+  test('limpa todos os pagamentos sem apagar ninguém', () => {
+    const db = createTestDb();
+    const fulano = createUser(db, { number: 1, name: 'Fulano' });
+    const siclano = createUser(db, { number: 2, name: 'Siclano' });
+    setPaid(db, fulano.id, true);
+    setPaid(db, siclano.id, true);
+
+    clearPaid(db);
+
+    expect(listUsers(db)).toEqual([
+      { ...fulano, paid: false },
+      { ...siclano, paid: false },
+    ]);
   });
 });

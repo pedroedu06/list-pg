@@ -31,6 +31,14 @@ export function deleteUser(db: Db, id: number): void {
   db.delete(users).where(eq(users.id, id)).run();
 }
 
+export function setPaid(db: Db, id: number, paid: boolean): void {
+  db.update(users).set({ paid }).where(eq(users.id, id)).run();
+}
+
+export function clearPaid(db: Db): void {
+  db.update(users).set({ paid: false }).run();
+}
+
 function validate(db: Db, input: UserInput, ownId?: number): UserInput {
   const name = input.name.trim();
   if (!name) throw new UserValidationError('Informe o nome');

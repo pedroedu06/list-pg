@@ -2,15 +2,24 @@ import { useCallback, useState } from 'react';
 
 import { db } from '@/db/client';
 import type { User } from '@/db/schema';
-import { createUser, deleteUser, listUsers, updateUser, type UserInput } from '@/db/users';
+import {
+  clearPaid,
+  createUser,
+  deleteUser,
+  listUsers,
+  setPaid,
+  updateUser,
+  type UserInput,
+} from '@/db/users';
 
-/** Cadastro de usuários com a lista recarregada após cada alteração. */
+/** Usuários do banco, com a lista recarregada após cada alteração. */
 export function useUsers() {
   const [users, setUsers] = useState<User[]>(() => listUsers(db));
   const reload = useCallback(() => setUsers(listUsers(db)), []);
 
   return {
     users,
+    reload,
     create: (input: UserInput) => {
       createUser(db, input);
       reload();
@@ -21,6 +30,14 @@ export function useUsers() {
     },
     remove: (id: number) => {
       deleteUser(db, id);
+      reload();
+    },
+    setPaid: (id: number, paid: boolean) => {
+      setPaid(db, id, paid);
+      reload();
+    },
+    clearPaid: () => {
+      clearPaid(db);
       reload();
     },
   };
