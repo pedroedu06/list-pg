@@ -91,11 +91,13 @@ Os profiles de build estão em `eas.json`. `preview` gera um APK para instalar d
 ```
 src/
   app/            rotas (expo-router): cada arquivo é uma tela
-    (tabs)/       abas Lista (index) e Prévia
+    index.tsx     Lista: checks de quem pagou + Limpar
     editar.tsx    cadastro de pessoas
+    previa.tsx    texto final + Copiar / Enviar no WhatsApp
   components/     componentes reutilizáveis
   constants/      tema e espaçamentos
   db/             schema, cliente do banco e helper de testes
   hooks/
+  lib/            formatação da mensagem e compartilhamento
 drizzle/          migrations geradas pelo drizzle-kit
 ```

@@ -61,6 +61,14 @@ export default function ListaScreen() {
             );
           }}
         />
+
+        <Link href="/previa" asChild>
+          <Pressable>
+            <ThemedView type="backgroundElement" style={styles.generate}>
+              <ThemedText type="smallBold">Gerar lista</ThemedText>
+            </ThemedView>
+          </Pressable>
+        </Link>
       </SafeAreaView>
     </ThemedView>
   );
@@ -72,4 +80,5 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three },
   title: { flex: 1 },
   item: { paddingVertical: Spacing.two },
+  generate: { padding: Spacing.three, borderRadius: Spacing.two, alignItems: 'center' },
 });

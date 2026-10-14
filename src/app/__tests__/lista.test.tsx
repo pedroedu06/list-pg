@@ -7,7 +7,8 @@ import { db } from '@/db/client';
 import { users } from '@/db/schema';
 import { createUser, listUsers, setPaid } from '@/db/users';
 import EditarScreen from '../editar';
-import ListaScreen from '../(tabs)/index';
+import PreviaScreen from '../previa';
+import ListaScreen from '../index';
 
 beforeEach(() => {
   db.delete(users).run();
@@ -17,7 +18,7 @@ beforeEach(() => {
 // Com Stack, como no app: a Lista continua montada por baixo da tela Editar.
 function renderLista() {
   return renderRouter(
-    { _layout: () => <Stack />, index: ListaScreen, editar: EditarScreen },
+    { _layout: () => <Stack />, index: ListaScreen, editar: EditarScreen, previa: PreviaScreen },
     { initialUrl: '/' },
   );
 }
@@ -94,4 +95,15 @@ test('quem foi cadastrado em Editar aparece ao voltar para a Lista', async () =>
   await act(() => testRouter.back());
 
   expect(await screen.findByRole('checkbox', { name: '5 - Beltrano' })).toBeOnTheScreen();
+});
+
+test('Gerar lista abre a prévia com quem foi marcado', async () => {
+  createUser(db, { number: 1, name: 'Fulano' });
+  createUser(db, { number: 2, name: 'Siclano' });
+  await renderLista();
+
+  await fireEvent.press(check('2 - Siclano'));
+  await fireEvent.press(screen.getByRole('link', { name: 'Gerar lista' }));
+
+  expect(await screen.findByText('2 - Siclano PG')).toBeOnTheScreen();
 });

@@ -23,8 +23,9 @@ export default function RootLayout() {
         </ThemedView>
       ) : (
         <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="editar" options={{ title: 'Pessoas' }} />
+          <Stack.Screen name="previa" options={{ title: 'Prévia' }} />
         </Stack>
       )}
     </ThemeProvider>

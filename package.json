@@ -6,6 +6,7 @@
     "@expo/ui": "~57.0.22",
     "drizzle-orm": "^0.45.4",
     "expo": "~57.0.27",
+    "expo-clipboard": "~57.0.2",
     "expo-constants": "~57.0.21",
     "expo-font": "~57.0.4",
     "expo-glass-effect": "~57.0.4",
